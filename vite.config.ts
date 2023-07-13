@@ -21,6 +21,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://practicetb.supsy.xyz',
+        changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
