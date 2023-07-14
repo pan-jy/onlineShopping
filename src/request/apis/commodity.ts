@@ -1,12 +1,16 @@
 import axios from '../config'
-import type { Commodity, CommodityDetail } from '@/types/commodity'
+import type {
+  Commodity,
+  CommodityDetail,
+  ShoppingCart
+} from '@/types/commodity'
 
 async function getCommodityList(num: number): Promise<Commodity[]> {
   const res = await axios.get(`/commodity/getRandomTradeByNumber/${num}`)
   return res.data
 }
 
-async function getCommodityDetailById(id: number): Promise<CommodityDetail> {
+async function getCommodityDetailById(id: string): Promise<CommodityDetail> {
   const res = await axios.post(
     `/commodity/getTradeMessageUseFuzzyMatchingById/${id}`
   )
@@ -20,4 +24,14 @@ async function searchCommodityByKeyword(keyword: string) {
   return res.data
 }
 
-export { getCommodityList, getCommodityDetailById, searchCommodityByKeyword }
+async function getShoppingCart(): Promise<ShoppingCart[]> {
+  const res = await axios.post('/user/shoppingTrolley/showUserShoppingTrolley')
+  return res.data
+}
+
+export {
+  getCommodityList,
+  getCommodityDetailById,
+  searchCommodityByKeyword,
+  getShoppingCart
+}

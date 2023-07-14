@@ -2,20 +2,21 @@
   <section class="recommend">
     <p class="title">为您推荐</p>
     <div class="list">
-      <CommodityCard v-for="item in list" :key="item.id" :commodity="item" />
+      <CommodityCard
+        v-for="commodity in recommendList"
+        :key="commodity.id"
+        :commodity="commodity"
+      />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
 import type { Commodity } from '@/types/commodity'
-import { getCommodityList } from '@/request/apis/commodity'
-const list: Array<Commodity> = reactive([])
 
-getCommodityList(10).then((data) => {
-  list.push(...data)
-})
+defineProps<{
+  recommendList: Array<Commodity>
+}>()
 </script>
 
 <style lang="scss" scoped>

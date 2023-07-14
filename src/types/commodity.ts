@@ -1,4 +1,4 @@
-type Commodity = {
+interface Commodity {
   id: number
   businessName: string
   covers: string
@@ -9,10 +9,7 @@ type Commodity = {
   tradeName: string
 }
 
-type CommodityDetail = {
-  id: number
-  businessName: string
-  covers: string
+interface CommodityDetail extends Commodity {
   details: Array<{
     id: number
     commodityId: number
@@ -23,11 +20,16 @@ type CommodityDetail = {
     commodityId: number
     images: string
   }>
-  merchantId: string
-  price: number
-  sales: number
-  stock: number
-  tradeName: string
 }
 
-export type { Commodity, CommodityDetail }
+interface ShoppingCart extends Commodity {
+  commodityId: string
+  count: number
+  userId: string
+}
+
+interface ViewRecord extends Commodity {
+  lastTime: string
+}
+
+export type { Commodity, CommodityDetail, ShoppingCart, ViewRecord }

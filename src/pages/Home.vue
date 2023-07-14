@@ -55,7 +55,7 @@
         立即登录
       </van-button>
     </div>
-    <van-back-top bottom="60px" right="10px" />
+    <van-back-top bottom="90px" right="10px" />
   </div>
 </template>
 

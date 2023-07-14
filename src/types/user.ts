@@ -8,4 +8,12 @@ type UserInfo = {
   username: string
 }
 
-export type { UserInfo }
+type Address = {
+  id: number
+  userId: string
+  userName: string
+  address: string
+  phoneNumber: string
+}
+
+export type { UserInfo, Address }

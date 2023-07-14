@@ -19,15 +19,15 @@
         </van-cell>
 
         <van-grid clickable :column-num="3">
-          <van-grid-item icon="pending-payment" badge="10" text="待支付" />
+          <van-grid-item icon="pending-payment" badge="1" text="待支付" />
           <van-grid-item icon="underway-o" text="待发货" />
           <van-grid-item icon="logistics" text="待收货" />
         </van-grid>
 
-        <van-cell title="管理收货地址" is-link />
-        <van-cell title="优惠券" is-link />
-        <van-cell title="浏览记录" is-link />
-        <van-cell title="退出登录" is-link @click="logout" />
+        <van-cell title="管理收货地址" is-link to="/address-list" />
+        <!-- <van-cell title="优惠券" is-link /> -->
+        <van-cell title="浏览记录" is-link to="/view-record" />
+        <van-cell title="退出登录" is-link @click="logoutClick" />
         <!-- <van-cell title="设置" is-link to="/setting" /> -->
       </article>
     </div>
@@ -35,12 +35,11 @@
 </template>
 
 <script setup lang="ts">
-// import { useRouter } from 'vue-router'
 import { getUserInfo, logout } from '@/request/apis/user'
 import type { UserInfo } from '@/types/user'
 import { ref } from 'vue'
+import { showConfirmDialog } from 'vant'
 
-// const router = useRouter()
 // 初始化userInfo
 const userInfo = ref<UserInfo>({} as UserInfo)
 getUserInfo()
@@ -57,6 +56,19 @@ function onRefresh() {
   setTimeout(() => {
     refreshing.value = false
   }, 1000)
+}
+
+function logoutClick() {
+  showConfirmDialog({
+    title: '退出登录',
+    message: '确定要退出登录吗？',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
+  })
+    .then(() => {
+      logout()
+    })
+    .catch(() => {})
 }
 </script>
 

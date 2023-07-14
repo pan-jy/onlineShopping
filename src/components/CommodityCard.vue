@@ -4,7 +4,10 @@
     <div class="info">
       <van-notice-bar class="info-name" :text="commodity.tradeName" />
       <section class="footer">
-        <p class="info-price">￥{{ commodity.price }}</p>
+        <p class="info-price">
+          <span style="font-size: 0.8rem">￥</span>
+          <span>{{ commodity.price }}</span>
+        </p>
         <div class="info-sales">
           <van-icon name="fire-o" color="#ee0a24" />
           <span>{{ commodity.sales }}</span>
@@ -57,7 +60,7 @@ function toDetail(id: number) {
   }
 
   &-price {
-    font-size: 16px;
+    font-size: 1.1rem;
     color: #f22;
     font-weight: bold;
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <van-tabs scrollspy sticky>
+    <van-tabs scrollspy sticky ref="scrollTabs">
       <van-tab title="商品">
         <van-swipe style="height: 40vh">
           <van-swipe-item
@@ -70,7 +70,7 @@
         />
       </van-tab>
       <van-tab title="推荐">
-        <Recommend v-if="reloaded" />
+        <Recommend :recommendList="recommendList" />
       </van-tab>
       <template #nav-left>
         <van-icon
@@ -88,8 +88,8 @@
       </template>
     </van-tabs>
     <van-action-bar>
-      <van-action-bar-icon icon="chat-o" text="客服" />
       <van-action-bar-icon icon="shop-o" text="店铺" />
+      <van-action-bar-icon icon="cart-o" text="购物车" to="/cart" />
       <van-action-bar-button
         color="#00b3f9"
         type="warning"
@@ -147,7 +147,7 @@
         <section class="select-body">
           <div class="select-body-count">
             <span>数量</span>
-            <van-stepper v-model="count" />
+            <van-stepper theme="round" v-model="count" />
           </div>
         </section>
       </div>
@@ -161,6 +161,7 @@
           type="warning"
           text="加入购物车"
           round
+          @click="addCart"
         />
         <van-button
           v-show="showBtns === 0 || showBtns === 1"
@@ -170,6 +171,7 @@
           type="danger"
           text="立即购买"
           round
+          @click="buyNow"
         />
       </div>
     </van-action-sheet>
@@ -178,14 +180,29 @@
 
 <script setup lang="ts">
 import { LocationQueryValue, useRoute, useRouter } from 'vue-router'
-import { getCommodityDetailById } from '@/request/apis/commodity'
+import {
+  getCommodityDetailById,
+  getCommodityList
+} from '@/request/apis/commodity'
+import { addShoppingCart } from '@/request/apis/user'
 import { ref, watch } from 'vue'
-import { CommodityDetail } from '@/types/commodity'
+import { Commodity, CommodityDetail } from '@/types/commodity'
+import type { TabsInstance } from 'vant'
+import { showNotify } from 'vant'
 
+// 路由
 const route = useRoute()
 const router = useRouter()
+// 商品详情
 const commodityDetail = ref<CommodityDetail>({} as CommodityDetail)
-const reloaded = ref(true)
+const scrollTabs = ref<TabsInstance>()
+// 推荐列表
+const recommendList = ref<Commodity[]>([])
+function getRecommendList() {
+  getCommodityList(10).then((data) => {
+    recommendList.value = data
+  })
+}
 // 选择面板
 const showSelect = ref(false)
 const showBtns = ref<-1 | 0 | 1>(0) // -1显示加入购物车，0都显示，1显示立即购买
@@ -212,14 +229,16 @@ const options = [
   ]
 ]
 
+// 监听query变化重新获取数据
+let id: string | undefined // 商品id
 watch(
   route,
   async () => {
-    reloaded.value = false
-    const id = getId(route.query.id)
+    id = getId(route.query.id)
     if (!id) return
+    scrollTabs.value?.scrollTo(0)
+    getRecommendList()
     commodityDetail.value = await getDetail(id)
-    reloaded.value = true
   },
   {
     immediate: true
@@ -229,18 +248,39 @@ watch(
 function getId(id: LocationQueryValue | LocationQueryValue[]) {
   if (Array.isArray(id)) id = id[0]
   if (id == null) return
-  return parseInt(id)
+  return id
 }
 
-async function getDetail(id: number) {
+async function addCart() {
+  if (!id) return
+  await addShoppingCart(id, count.value)
+  showSelect.value = false
+  showNotify({ type: 'success', message: '添加成功' })
+}
+
+function buyNow() {
+  if (!id) return
+
+  localStorage.setItem(
+    'PendingSettlement',
+    JSON.stringify({
+      ...commodityDetail.value,
+      count: count.value
+    })
+  )
+  router.push('/settlement')
+  showSelect.value = false
+}
+
+async function getDetail(id: string) {
   return await getCommodityDetailById(id)
 }
 </script>
 
 <style lang="scss" scoped>
 .tabs-icon {
-  font-size: 20px;
-  color: #000;
+  // font-size: 20px;
+  color: #1989fa;
   height: 100%;
   display: flex;
   align-items: center;

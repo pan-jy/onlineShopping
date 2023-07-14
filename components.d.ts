@@ -7,6 +7,8 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AddressList: typeof import('./src/pages/AddressList.vue')['default']
+    BrowsingHistory: typeof import('./src/pages/BrowsingHistory.vue')['default']
     Cart: typeof import('./src/pages/Cart.vue')['default']
     CommodityCard: typeof import('./src/components/CommodityCard.vue')['default']
     CommodityDetail: typeof import('./src/pages/CommodityDetail.vue')['default']
@@ -20,13 +22,16 @@ declare module 'vue' {
     Search: typeof import('./src/pages/Search.vue')['default']
     SearchResult: typeof import('./src/pages/SearchResult.vue')['default']
     Setting: typeof import('./src/pages/Setting.vue')['default']
+    Settlement: typeof import('./src/pages/Settlement.vue')['default']
     VanActionBar: typeof import('vant/es')['ActionBar']
     VanActionBarButton: typeof import('vant/es')['ActionBarButton']
     VanActionBarIcon: typeof import('vant/es')['ActionBarIcon']
     VanActionSheet: typeof import('vant/es')['ActionSheet']
+    VanAddressList: typeof import('vant/es')['AddressList']
     VanBackTop: typeof import('vant/es')['BackTop']
     VanBarrage: typeof import('vant/es')['Barrage']
     VanButton: typeof import('vant/es')['Button']
+    VanCard: typeof import('vant/es')['Card']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanDivider: typeof import('vant/es')['Divider']
@@ -40,12 +45,15 @@ declare module 'vue' {
     VanIcon: typeof import('vant/es')['Icon']
     VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
+    VanNavBar: typeof import('vant/es')['NavBar']
     VanNoticeBar: typeof import('vant/es')['NoticeBar']
     VanPullRefresh: typeof import('vant/es')['PullRefresh']
     VanSearch: typeof import('vant/es')['Search']
     VanShareSheet: typeof import('vant/es')['ShareSheet']
     VanStepper: typeof import('vant/es')['Stepper']
+    VanSubmitBar: typeof import('vant/es')['SubmitBar']
     VanSwipe: typeof import('vant/es')['Swipe']
+    VanSwipeCell: typeof import('vant/es')['SwipeCell']
     VanSwipeItem: typeof import('vant/es')['SwipeItem']
     VanSwitch: typeof import('vant/es')['Switch']
     VanTab: typeof import('vant/es')['Tab']
@@ -55,5 +63,6 @@ declare module 'vue' {
     VanTag: typeof import('vant/es')['Tag']
     VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
     VanWatermark: typeof import('vant/es')['Watermark']
+    ViewRecord: typeof import('./src/pages/ViewRecord.vue')['default']
   }
 }
