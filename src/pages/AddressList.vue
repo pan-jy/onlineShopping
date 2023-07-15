@@ -15,9 +15,11 @@ import { computed, ref, watch } from 'vue'
 import { getAddressList } from '@/request/apis/user'
 import { Address } from '@/types/user'
 import { useBaseStore } from '@/store/baseStore'
+import { useRouter } from 'vue-router'
 
 const addressList = ref<Address[]>([])
 const chosenAddressId = ref(0)
+const router = useRouter()
 
 const baseStore = useBaseStore()
 
@@ -53,8 +55,13 @@ watch(
   }
 )
 
-const onAdd = () => {}
-const onEdit = () => {}
+const onAdd = () => {
+  router.push('/add-address')
+}
+const onEdit = ({ id }: { id: number }) => {
+  chosenAddressId.value = id
+  router.push('/edit-address')
+}
 </script>
 
 <style lang="scss" scoped></style>

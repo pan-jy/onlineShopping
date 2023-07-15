@@ -12,20 +12,9 @@
 
   <router-view #default="{ Component }" :class="{ 'is-tab': isTab }">
     <transition :enter-active-class="enterActiveClass">
-      <div>
-        <keep-alive>
-          <component
-            :is="Component"
-            :key="route.path"
-            v-if="route.meta.keepAlive"
-          />
-        </keep-alive>
-        <component
-          :is="Component"
-          :key="route.path"
-          v-if="!route.meta.keepAlive"
-        />
-      </div>
+      <keep-alive :include="['Home']">
+        <component :is="Component" :key="route.path" />
+      </keep-alive>
     </transition>
   </router-view>
   <van-tabbar route v-show="isTab">

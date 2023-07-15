@@ -1,6 +1,7 @@
 <template>
   <div class="detail">
     <van-tabs scrollspy sticky ref="scrollTabs">
+      <!-- 商品信息页 -->
       <van-tab title="商品">
         <van-swipe style="height: 40vh">
           <van-swipe-item
@@ -49,8 +50,14 @@
               </div>
             </template>
           </van-cell>
+          <van-coupon-cell
+            :coupons="coupons"
+            :chosen-coupon="chosenCoupon"
+            @click="showCupon = true"
+          />
         </van-cell-group>
       </van-tab>
+      <!-- 商品详情页 -->
       <van-tab title="详情">
         <van-divider
           :style="{
@@ -69,6 +76,7 @@
           lazy-load
         />
       </van-tab>
+      <!-- 推荐页 -->
       <van-tab title="推荐">
         <Recommend :recommendList="recommendList" />
       </van-tab>
@@ -87,6 +95,7 @@
         />
       </template>
     </van-tabs>
+    <!-- 底部 -->
     <van-action-bar>
       <van-action-bar-icon icon="shop-o" text="店铺" />
       <van-action-bar-icon icon="cart-o" text="购物车" to="/cart" />
@@ -103,13 +112,13 @@
         @click="setSelect(1)"
       />
     </van-action-bar>
-
+    <!-- 分享面板 -->
     <van-share-sheet
       v-model:show="showShare"
       title="立即分享给好友"
       :options="options"
     />
-
+    <!-- 服务面板 -->
     <van-action-sheet
       v-model:show="showService"
       cancel-text="我知道了"
@@ -128,7 +137,7 @@
         </p>
       </div>
     </van-action-sheet>
-
+    <!-- 选择面板 -->
     <van-action-sheet v-model:show="showSelect">
       <div class="select-content">
         <section class="select-content-header">
@@ -175,6 +184,20 @@
         />
       </div>
     </van-action-sheet>
+    <!-- 优惠券面板 -->
+    <van-popup
+      v-model:show="showCupon"
+      round
+      position="bottom"
+      style="height: 90%; padding-top: 4px"
+    >
+      <van-coupon-list
+        :coupons="coupons"
+        :chosen-coupon="chosenCoupon"
+        :disabled-coupons="disabledCoupons"
+        @change="onChange"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -228,6 +251,90 @@ const options = [
     { name: '小程序码', icon: 'weapp-qrcode' }
   ]
 ]
+// 优惠券面板
+const showCupon = ref(false)
+const daySeconds = 24 * 60 * 60
+const coupons = ref([
+  {
+    id: '1',
+    name: '无门槛优惠券',
+    condition: '无门槛\n最多优惠12元',
+    startAt: Date.now() / 1000 - 7 * daySeconds,
+    endAt: Date.now() / 1000 + 3 * daySeconds,
+    description: '领取来源: 活动赠送',
+    reason: '',
+    value: 500,
+    valueDesc: '5',
+    unitDesc: '元'
+  },
+  {
+    id: '2',
+    name: '满500减66',
+    condition: '满500减66\n最多优惠66元',
+    startAt: Date.now() / 1000 - 5 * daySeconds,
+    endAt: Date.now() / 1000 + 9 * daySeconds,
+    description: '领取来源: 活动赠送',
+    reason: '',
+    value: 6600,
+    valueDesc: '66',
+    unitDesc: '元'
+  },
+  {
+    id: '3',
+    name: '满9可用',
+    condition: '限该店铺内商品可用',
+    startAt: Date.now() / 1000 - 10 * daySeconds,
+    endAt: Date.now() / 1000 + 2 * daySeconds,
+    description: '领取来源: 活动赠送',
+    reason: '',
+    value: 100,
+    valueDesc: '1',
+    unitDesc: '元'
+  }
+])
+const disabledCoupons = ref([
+  {
+    id: '1',
+    name: '无门槛优惠券',
+    condition: '无门槛\n最多优惠12元',
+    startAt: Date.now() / 1000 - 7 * daySeconds,
+    endAt: Date.now() / 1000 + 3 * daySeconds,
+    description: '不可用原因: 已过期',
+    reason: '',
+    value: 500,
+    valueDesc: '5',
+    unitDesc: '元'
+  },
+  {
+    id: '2',
+    name: '满500减66',
+    condition: '满500减66\n最多优惠66元',
+    startAt: Date.now() / 1000 - 5 * daySeconds,
+    endAt: Date.now() / 1000 + 9 * daySeconds,
+    description: '不可用原因: 已过期',
+    reason: '',
+    value: 6600,
+    valueDesc: '66',
+    unitDesc: '元'
+  },
+  {
+    id: '3',
+    name: '满9可用',
+    condition: '限该店铺内商品可用',
+    startAt: Date.now() / 1000 - 10 * daySeconds,
+    endAt: Date.now() / 1000 + 2 * daySeconds,
+    description: '不可用原因: 非指定商品',
+    reason: '',
+    value: 100,
+    valueDesc: '1',
+    unitDesc: '元'
+  }
+])
+const chosenCoupon = ref(-1)
+const onChange = (index: number) => {
+  showCupon.value = false
+  chosenCoupon.value = index
+}
 
 // 监听query变化重新获取数据
 let id: string | undefined // 商品id

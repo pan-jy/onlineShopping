@@ -31,6 +31,16 @@ const routes: Array<RouteRecordRaw> = [
     meta: { navTitle: '地址管理', leftArrow: true }
   },
   {
+    path: '/add-address',
+    component: () => import('@/pages/AddAddress.vue'),
+    meta: { navTitle: '新增地址', leftArrow: true }
+  },
+  {
+    path: '/edit-address',
+    component: () => import('@/pages/EditAddress.vue'),
+    meta: { navTitle: '编辑地址', leftArrow: true }
+  },
+  {
     path: '/view-record',
     component: () => import('@/pages/ViewRecord.vue'),
     meta: { navTitle: '浏览记录', leftArrow: true, navRightIcon: 'search' }
