@@ -246,11 +246,12 @@ onBeforeUnmount(() => {
     display: inline-block;
     margin-right: 10px;
     margin-bottom: 10px;
-    padding: 0 10px;
+    padding: .4rem 1.2rem;
     max-width: 20vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: .7rem;
   }
 }
 

@@ -80,8 +80,9 @@ function logoutClick() {
   height: calc(100vh - 50px);
 
   .header {
-    width: 120%;
-    transform: translateX(-10%);
+    box-sizing: border-box;
+    width: 120vw;
+    transform: translateX(-10vw);
     display: flex;
     flex-direction: column;
     justify-content: center;

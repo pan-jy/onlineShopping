@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import CommodityCard from '@/components/CommodityCard.vue'
-import { onMounted, reactive, ref } from 'vue'
+import { onActivated, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Commodity } from '@/types/commodity'
 import { getCommodityList } from '@/request/apis/commodity'
@@ -97,7 +97,14 @@ const showBanner = ref(false)
 onMounted(async () => {
   await onLoad()
   swiperList.push(...commodityList.splice(0, 4))
-  localStorage.getItem('token') || (showBanner.value = true)
+})
+
+onActivated(() => {
+  if (localStorage.getItem('token')) {
+    showBanner.value = false
+  } else {
+    showBanner.value = true
+  }
 })
 </script>
 
