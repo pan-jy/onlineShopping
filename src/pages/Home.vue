@@ -15,15 +15,10 @@
         :immediate-check="false"
       >
         <div class="commodity-list">
-          <van-swipe
-            class="commodity swiper"
-            :autoplay="3000"
-            indicator-color="#39a9ed"
-          >
+          <van-swipe class="swiper" :autoplay="3000" indicator-color="#39a9ed">
             <van-swipe-item class="swiper-item" v-for="commodity in swiperList">
               <van-image
                 width="100%"
-                height="100%"
                 :src="commodity.covers"
                 @click="
                   router.push({
@@ -35,6 +30,7 @@
               />
             </van-swipe-item>
           </van-swipe>
+
           <CommodityCard
             class="commodity"
             v-for="commodity in commodityList"
@@ -74,6 +70,8 @@ const error = ref(false)
 const commodityList: Array<Commodity> = reactive([])
 const swiperList: Array<Commodity> = reactive([])
 
+  
+
 const onRefresh = async () => {
   finished.value = false
   loading.value = true
@@ -99,7 +97,11 @@ onMounted(async () => {
   swiperList.push(...commodityList.splice(0, 4))
 })
 
-onActivated(() => {
+onActivated(async () => {
+  if (commodityList.length === 0) {
+    await onLoad()
+    swiperList.push(...commodityList.splice(0, 4))
+  }
   if (localStorage.getItem('token')) {
     showBanner.value = false
   } else {
@@ -123,14 +125,11 @@ onActivated(() => {
   margin-top: 20px;
   padding: 0 15px;
 }
-
 .swiper {
   width: 49%;
+  height: fit-content;
   border-radius: 10px;
-
-  &-item {
-    background-color: #fff;
-  }
+  margin-right: 2%;
 }
 
 .commodity {
@@ -138,6 +137,7 @@ onActivated(() => {
 
   &:nth-child(odd) {
     margin-right: 2%;
+    transform: translateY(calc(-1.1rem - 42px));
   }
 }
 

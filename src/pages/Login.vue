@@ -1,6 +1,20 @@
 <template>
   <div class="login">
-    <Vue3Lottie class="login-avatar" :animationData="animationData" />
+    <Vue3Lottie
+      v-show="!isPasswordFocus"
+      class="login-avatar"
+      :animationData="animationAvatar"
+      direction="alternate"
+      ref="lottie"
+      @on-animation-loaded="lottie.playSegments([60, 300], true)"
+    />
+    <Vue3Lottie
+      v-show="isPasswordFocus"
+      class="login-hide"
+      direction="alternate"
+      ref="lottieHide"
+      :animationData="animationHide"
+    />
     <van-form class="form" @submit="onSubmit">
       <van-cell-group inset>
         <van-field
@@ -9,8 +23,8 @@
           label="用户名"
           placeholder="用户名"
           clearable
-          autofocus
           clickable
+          @focus="otherFocus"
           :rules="[{ required: true, message: '请填写用户名' }]"
         />
         <van-field
@@ -21,6 +35,7 @@
           type="tel"
           clearable
           clickable
+          @focus="otherFocus"
           placeholder="手机号"
           :rules="
             isSignIn
@@ -38,6 +53,8 @@
           label="密码"
           placeholder="密码"
           clickable
+          @focus="passwordFocus"
+          @blur="otherFocus"
           autocomplete="password"
           :rules="[{ required: true, message: '请填写密码' }]"
         />
@@ -49,6 +66,8 @@
           label="确认密码"
           placeholder="请确认密码"
           clickable
+          @focus="passwordFocus"
+          @blur="otherFocus"
           autocomplete="password"
           :rules="
             isSignIn
@@ -82,14 +101,17 @@
 </template>
 
 <script setup lang="ts">
-import animationData from '@/assets/animationAvatar.json'
+import animationAvatar from '@/assets/animationAvatar.json'
+import animationHide from '@/assets/animationHide.json'
 import { Vue3Lottie } from 'vue3-lottie'
-import { reactive, ref } from 'vue'
+import { onUnmounted, reactive, ref } from 'vue'
 import { register, login } from '@/request/apis/user'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
+const lottie = ref()
+const lottieHide = ref()
 const isSignIn = ref(true)
 const textMap = new Map([
   [true, '登录'],
@@ -125,9 +147,55 @@ async function onSubmit() {
   }
 }
 
+const isPasswordFocus = ref(false)
+function otherFocus() {
+  isPasswordFocus.value = false
+  if (!lottie.value) return
+  lottie.value.goToAndPlay(0, true)
+  // 使用 requestAnimation 60帧后执行 lottie.value.playSegments([60, 300], true)
+  let frameCount = 0
+  let requestId = 0
+
+  function checkFrameCount() {
+    frameCount++
+    if (frameCount >= 60) {
+      lottie.value.playSegments([60, 300], true)
+      cancelAnimationFrame(requestId)
+    } else {
+      requestId = requestAnimationFrame(checkFrameCount)
+    }
+  }
+  requestId = requestAnimationFrame(checkFrameCount)
+}
+
+function passwordFocus() {
+  if (!lottie.value) return
+  lottie.value.playSegments([0, 361], true)
+  lottie.value.goToAndPlay(300, true)
+  let frameCount = 0
+  let requestId = 0
+
+  function checkFrameCount() {
+    frameCount++
+    if (frameCount >= 60) {
+      lottie.value.pause()
+      lottieHide.value.goToAndPlay(150, true)
+      isPasswordFocus.value = true
+      cancelAnimationFrame(requestId)
+    } else {
+      requestId = requestAnimationFrame(checkFrameCount)
+    }
+  }
+  requestId = requestAnimationFrame(checkFrameCount)
+}
+
 function changeType() {
   isSignIn.value = !isSignIn.value
 }
+
+onUnmounted(() => {
+  lottie.value?.destroy()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -140,6 +208,11 @@ function changeType() {
 
   &-avatar {
     width: 15rem;
+    height: 15rem;
+  }
+
+  &-hide {
+    width: 12rem;
     height: 15rem;
   }
 }

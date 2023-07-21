@@ -257,6 +257,13 @@ onBeforeUnmount(() => {
 
 .commodity-list {
   animation: zoomInUp 0.5s ease-in 0s 1 forwards;
+  padding: 0 2%;
+}
+.commodity {
+  margin-top: 1vh;
+  &:nth-child(odd) {
+    margin-right: 2%;
+  }
 }
 
 .van-search {
