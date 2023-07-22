@@ -132,6 +132,8 @@ async function onSubmit() {
       const { token } = await login(form.username, form.password)
       localStorage.setItem('token', token)
       router.replace('/home')
+      form.username = ''
+      form.password = ''
       // console.log('🚀 ~ file: Login.vue:53 ~ onSubmit ~ token:', token)
     } else {
       await register(form.username, form.phone, form.password)
@@ -139,9 +141,6 @@ async function onSubmit() {
       isSignIn.value = true
       // console.log('🚀 ~ file: Login.vue:111 ~ onSubmit ~ res:', res)
     }
-    form.phone = ''
-    form.password = ''
-    form.username = ''
   } catch (err) {
     console.log('🚀 ~ file: Login.vue:53 ~ onSubmit ~ err:', err)
   }
